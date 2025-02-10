@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Catch the Square</title>
+    <style>
+      #game-container {
+        width: 400px;
+        height: 400px;
+        border: 2px solid black;
+        position: relative;
+        overflow: hidden;
+        background: #f0f0f0;
+      }
+
+      #player {
+        width: 50px;
+        height: 50px;
+        background-color: blue;
+        position: absolute;
+        bottom: 0;
+        left: 175px;
+      }
+
+      #target {
+        width: 30px;
+        height: 30px;
+        background-color: red;
+        position: absolute;
+        top: 0;
+      }
+
+      #score {
+        font-size: 24px;
+        margin: 10px 0;
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="score">Score: <span id="score-value">0</span></div>
+    <div id="game-container">
+      <div id="player"></div>
+      <div id="target"></div>
+    </div>
+
+    <script>
+      const player = document.getElementById('player');
+      const target = document.getElementById('target');
+      const scoreElement = document.getElementById('score-value');
+      let score = 0;
+      let playerX = 175;
+      let targetX = Math.random() * 370;
+      let targetY = 0;
+      const speed = 3;
+
+      // Player movement
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' && playerX > 0) {
+          playerX -= 10;
+        }
+        if (e.key === 'ArrowRight' && playerX < 350) {
+          playerX += 10;
+        }
+        player.style.left = playerX + 'px';
+      });
+
+      // Game loop
+      function gameLoop() {
+        targetY += speed;
+        target.style.top = targetY + 'px';
+        target.style.left = targetX + 'px';
+
+        // Check collision
+        if (targetY > 350 && playerX < targetX + 30 && playerX + 50 > targetX) {
+          score++;
+          scoreElement.textContent = score;
+          resetTarget();
+        }
+        // Miss
+        else if (targetY > 400) {
+          resetTarget();
+        }
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      function resetTarget() {
+        targetY = 0;
+        targetX = Math.random() * 370;
+      }
+
+      gameLoop();
+    </script>
+  </body>
+</html>
